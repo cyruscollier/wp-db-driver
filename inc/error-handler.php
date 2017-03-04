@@ -27,4 +27,6 @@ function wp_error_handler( $errno, $errstr, $errfile ) {
 	return apply_filters( 'wp_error_handler', false, $errno, $errstr, $errfile );
 }
 
-wp_set_error_handler();
+if ( !(defined( 'WPDB_DRIVER_EXCLUDE_RAW_MYSQL_ERRORS' ) && WPDB_DRIVER_EXCLUDE_RAW_MYSQL_ERRORS) ) {
+    wp_set_error_handler();
+}
