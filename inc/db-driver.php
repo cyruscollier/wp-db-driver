@@ -781,15 +781,9 @@ class wpdb_drivers extends wpdb {
 	 */
 	public function set_sql_mode( $modes = array() ) {
 		if ( empty( $modes ) ) {
-			$res = $this->dbh->query( 'SELECT @@SESSION.sql_mode;' );
+            $modes_str = $this->get_var( 'SELECT @@SESSION.sql_mode;' );
 
-			if ( ! $res ) {
-				return;
-			}
-
-			$modes_str = $this->dbh->query_result( 0 );
-
-			if ( empty( $modes_str ) ) {
+            if ( empty( $modes_str ) ) {
 				return;
 			}
 
@@ -1489,7 +1483,6 @@ class wpdb_drivers extends wpdb {
 		elseif ( $is_connected ) {
 			$this->has_connected = true;
 			$this->ready = true;
-
 			$this->set_charset( $this->dbh );
 			$this->set_sql_mode();
 			$this->select( $this->dbname, $this->dbh );
@@ -1505,7 +1498,7 @@ class wpdb_drivers extends wpdb {
 	 *
 	 * @since 4.5.0
 	 * @access public
-	 * 
+	 *
 	 * @return bool True if the connection was successfully closed, false if it wasn't,
 	 *              or the connection doesn't exist.
 	 */
