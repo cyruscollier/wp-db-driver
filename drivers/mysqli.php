@@ -310,7 +310,7 @@ class wpdb_driver_mysqli extends wpdb_driver {
 	 * @return false|string false on failure, version number on success
 	 */
 	public function db_version() {
-		return preg_replace( '/[^0-9.].*/', '', $this->dbh->server_version );
+		return $this->dbh ? preg_replace( '/[^0-9.].*/', '', $this->dbh->server_version ) : false;
 	}
 
 

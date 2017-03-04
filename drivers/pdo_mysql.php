@@ -319,7 +319,7 @@ class wpdb_driver_pdo_mysql extends wpdb_driver {
 	 * @return false|string false on failure, version number on success
 	 */
 	public function db_version() {
-		return preg_replace( '/[^0-9.].*/', '', $this->dbh->getAttribute( PDO::ATTR_SERVER_VERSION ) );
+		return $this->dbh ? preg_replace( '/[^0-9.].*/', '', $this->dbh->getAttribute( PDO::ATTR_SERVER_VERSION ) ) : false;
 	}
 
 
