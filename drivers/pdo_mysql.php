@@ -139,7 +139,7 @@ class wpdb_driver_pdo_mysql extends wpdb_driver {
 	 *
 	 * @since 4.5.0
 	 * @access public
-	 * 
+	 *
 	 * @return bool True if the connection was successfully closed, false if it wasn't,
 	 *              or the connection doesn't exist.
 	 */
@@ -220,8 +220,8 @@ class wpdb_driver_pdo_mysql extends wpdb_driver {
 			$this->result = $this->dbh->query( $query );
 		}
 		catch ( Exception $e ) {
-			if ( WP_DEBUG) {
-				global $wpdb;
+            global $wpdb;
+			if ( WP_DEBUG && !$wpdb->suppress_errors ) {
 				error_log( "Error executing query: " . $e->getCode() . " - " . $e->getMessage() . " in query " . $query );
 			}
 			return false;
