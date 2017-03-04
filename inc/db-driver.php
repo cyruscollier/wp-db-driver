@@ -536,6 +536,15 @@ class wpdb_drivers extends wpdb {
 	 */
 	public $is_mysql = true;
 
+    /**
+     * Whether to use mysqli over mysql.
+     *
+     * @since 3.9.0
+     * @access private
+     * @var bool
+     */
+	public $use_mysqli = true;
+
 	/**
 	 * A list of incompatible SQL modes.
 	 *
@@ -1503,8 +1512,10 @@ class wpdb_drivers extends wpdb {
 	 *              or the connection doesn't exist.
 	 */
 	public function close() {
-		if ( $this->dbh ) {
-			return $this->dbh->close();
+		if ( $this->dbh && $this->dbh->close() ) {
+			$this->ready = false;
+            $this->has_connected = false;
+            return true;
 		}
 
 		return false;
