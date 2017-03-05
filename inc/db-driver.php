@@ -765,8 +765,9 @@ class wpdb_drivers extends wpdb {
 			$collate = $this->collate;
 		}
 
-		if ( ! $dbh->set_charset( $charset, $collate ) ) {
-            if ( $this->has_cap( 'collation' ) && ! empty( $charset ) ) {
+        if ( $this->has_cap( 'collation' ) && ! empty( $charset ) ) {
+            $set_charset_succeeded = $dbh->set_charset( $charset, $collate );
+            if ( $set_charset_succeeded ) {
                 $query = $this->prepare( 'SET NAMES %s', $charset );
                 if ( ! empty( $collate ) ) {
                     $query .= $this->prepare( ' COLLATE %s', $collate );
