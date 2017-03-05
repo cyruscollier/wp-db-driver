@@ -2889,66 +2889,6 @@ class wpdb_drivers extends wpdb {
 	}
 
 	/**
-	 * Find the first table name referenced in a query.
-	 *
-	 * @since 4.2.0
-	 * @access protected
-	 *
-	 * @param string $query The query to search.
-	 * @return string|false $table The table name found, or false if a table couldn't be found.
-	 */
-	protected function get_table_from_query( $query ) {
-		// Remove characters that can legally trail the table name.
-		$query = rtrim( $query, ';/-#' );
-
-		// Allow (select...) union [...] style queries. Use the first query's table name.
-		$query = ltrim( $query, "\r\n\t (" );
-
-		// Strip everything between parentheses except nested selects.
-		$query = preg_replace( '/\((?!\s*select)[^(]*?\)/is', '()', $query );
-
-		// Quickly match most common queries.
-		if ( preg_match( '/^\s*(?:'
-				. 'SELECT.*?\s+FROM'
-				. '|INSERT(?:\s+LOW_PRIORITY|\s+DELAYED|\s+HIGH_PRIORITY)?(?:\s+IGNORE)?(?:\s+INTO)?'
-				. '|REPLACE(?:\s+LOW_PRIORITY|\s+DELAYED)?(?:\s+INTO)?'
-				. '|UPDATE(?:\s+LOW_PRIORITY)?(?:\s+IGNORE)?'
-				. '|DELETE(?:\s+LOW_PRIORITY|\s+QUICK|\s+IGNORE)*(?:\s+FROM)?'
-				. ')\s+((?:[0-9a-zA-Z$_.`-]|[\xC2-\xDF][\x80-\xBF])+)/is', $query, $maybe ) ) {
-			return str_replace( '`', '', $maybe[1] );
-		}
-
-		// SHOW TABLE STATUS and SHOW TABLES
-		if ( preg_match( '/^\s*(?:'
-				. 'SHOW\s+TABLE\s+STATUS.+(?:LIKE\s+|WHERE\s+Name\s*=\s*)'
-				. '|SHOW\s+(?:FULL\s+)?TABLES.+(?:LIKE\s+|WHERE\s+Name\s*=\s*)'
-				. ')\W((?:[0-9a-zA-Z$_.`-]|[\xC2-\xDF][\x80-\xBF])+)\W/is', $query, $maybe ) ) {
-			return str_replace( '`', '', $maybe[1] );
-		}
-
-		// Big pattern for the rest of the table-related queries.
-		if ( preg_match( '/^\s*(?:'
-				. '(?:EXPLAIN\s+(?:EXTENDED\s+)?)?SELECT.*?\s+FROM'
-				. '|DESCRIBE|DESC|EXPLAIN|HANDLER'
-				. '|(?:LOCK|UNLOCK)\s+TABLE(?:S)?'
-				. '|(?:RENAME|OPTIMIZE|BACKUP|RESTORE|CHECK|CHECKSUM|ANALYZE|REPAIR).*\s+TABLE'
-				. '|TRUNCATE(?:\s+TABLE)?'
-				. '|CREATE(?:\s+TEMPORARY)?\s+TABLE(?:\s+IF\s+NOT\s+EXISTS)?'
-				. '|ALTER(?:\s+IGNORE)?\s+TABLE'
-				. '|DROP\s+TABLE(?:\s+IF\s+EXISTS)?'
-				. '|CREATE(?:\s+\w+)?\s+INDEX.*\s+ON'
-				. '|DROP\s+INDEX.*\s+ON'
-				. '|LOAD\s+DATA.*INFILE.*INTO\s+TABLE'
-				. '|(?:GRANT|REVOKE).*ON\s+TABLE'
-				. '|SHOW\s+(?:.*FROM|.*TABLE)'
-				. ')\s+\(*\s*((?:[0-9a-zA-Z$_.`-]|[\xC2-\xDF][\x80-\xBF])+)\s*\)*/is', $query, $maybe ) ) {
-			return str_replace( '`', '', $maybe[1] );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Load the column metadata from the last query.
 	 *
 	 * @since 3.5.0
