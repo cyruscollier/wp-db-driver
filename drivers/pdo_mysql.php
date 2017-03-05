@@ -216,16 +216,7 @@ class wpdb_driver_pdo_mysql extends wpdb_driver {
 			return false;
 		}
 
-		try {
-			$this->result = $this->dbh->query( $query );
-		}
-		catch ( Exception $e ) {
-            global $wpdb;
-			if ( WP_DEBUG && !$wpdb->suppress_errors ) {
-				error_log( "Error executing query: " . $e->getCode() . " - " . $e->getMessage() . " in query " . $query );
-			}
-			return false;
-		}
+		$this->result = $this->dbh->query( $query );
 
 		if ( preg_match( '/^\s*(create|alter|truncate|drop)\s/i', $query ) ) {
 			$return_val = $this->result;

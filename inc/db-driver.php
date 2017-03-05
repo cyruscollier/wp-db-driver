@@ -766,16 +766,14 @@ class wpdb_drivers extends wpdb {
 		}
 
 		if ( ! $dbh->set_charset( $charset, $collate ) ) {
-			if ( $this->has_cap( 'collation' ) && ! empty( $charset ) ) {
-				$query = $this->prepare( 'SET NAMES %s', $charset );
-
-				if ( ! empty( $collate ) ) {
-					$query .= $this->prepare( ' COLLATE %s', $collate );
-				}
-
-				$this->query( $query );
-			}
-		}
+            if ( $this->has_cap( 'collation' ) && ! empty( $charset ) ) {
+                $query = $this->prepare( 'SET NAMES %s', $charset );
+                if ( ! empty( $collate ) ) {
+                    $query .= $this->prepare( ' COLLATE %s', $collate );
+                }
+                $this->query( $query );
+            }
+        }
 	}
 
 	/**
@@ -1716,7 +1714,13 @@ class wpdb_drivers extends wpdb {
 			$this->timer_start();
 		}
 
-		$this->result = $this->dbh->query( $query );
+		try {
+            $this->result = $this->dbh->query( $query );
+        } catch ( Exception $e ) {
+            if ( WP_DEBUG && !$this->suppress_errors ) {
+                error_log( "Error executing query: " . $e->getCode() . " - " . $e->getMessage() . " in query " . $query );
+            }
+        }
 		$this->num_queries++;
 
 		if ( defined( 'SAVEQUERIES' ) && SAVEQUERIES ) {
