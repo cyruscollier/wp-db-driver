@@ -50,7 +50,7 @@ install_test_suite() {
 	echo "define( 'WPDB_DRIVER', '$WPDB_DRIVER');" >> wp-tests-config.php
 	echo "define( 'WPDB_DRIVER_EXCLUDE_RAW_MYSQL_ERRORS', true );" >> wp-tests-config.php
 
-	if [ $WP_VERSION == 'master' ]; then
+	if [ $WP_VERSION == 'master' ] || [ $WP_VERSION == '4.7' ]; then
 		patch -p0 < "$DIR/bin/changes.diff"
 	else
 		patch -p0 < "$DIR/bin/changes-old.diff"
