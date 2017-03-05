@@ -47,7 +47,8 @@ install_test_suite() {
 	sed $ioption "s/yourpasswordhere/$DB_PASS/" wp-tests-config.php
 	sed $ioption "s|localhost|${DB_HOST}|" wp-tests-config.php
 
-	echo "define( 'WPDB_DRIVER', '$WPDB_DRIVER'); " >> wp-tests-config.php
+	echo "define( 'WPDB_DRIVER', '$WPDB_DRIVER');" >> wp-tests-config.php
+	echo "define( 'WPDB_DRIVER_EXCLUDE_RAW_MYSQL_ERRORS', true );" >> wp-tests-config.php
 
 	if [ $WP_VERSION == 'master' ]; then
 		patch -p0 < "$DIR/bin/changes.diff"
