@@ -1,8 +1,8 @@
 Index: tests/phpunit/includes/utils.php
 ===================================================================
---- tests/phpunit/includes/utils.php	(revision 33328)
+--- tests/phpunit/includes/utils.php	(revision 40147)
 +++ tests/phpunit/includes/utils.php	(working copy)
-@@ -375,7 +375,7 @@
+@@ -380,7 +380,7 @@
  /**
   * Special class for exposing protected wpdb methods we need to access
   */
@@ -11,3 +11,20 @@ Index: tests/phpunit/includes/utils.php
  	public function __construct() {
  		global $wpdb;
  		$this->dbh = $wpdb->dbh;
+Index: tests/phpunit/tests/db/charset.php
+===================================================================
+--- tests/phpunit/tests/db/charset.php	(revision 40147)
++++ tests/phpunit/tests/db/charset.php	(working copy)
+@@ -27,12 +27,6 @@
+ 		require_once( dirname( dirname( __FILE__ ) ) . '/db.php' );
+
+ 		self::$_wpdb = new wpdb_exposed_methods_for_testing();
+-
+-		if ( self::$_wpdb->use_mysqli ) {
+-			self::$server_info = mysqli_get_server_info( self::$_wpdb->dbh );
+-		} else {
+-			self::$server_info = mysql_get_server_info( self::$_wpdb->dbh );
+-		}
+ 	}
+
+ 	/**
