@@ -633,6 +633,16 @@ class wpdb_drivers extends wpdb {
 		$this->dbhost = $dbhost;
 
 		$this->db_connect();
+
+        add_filter('dbdelta_queries', function($queries) {
+            foreach ($queries as &$query) {
+                $query = str_replace(
+                    ['unsigned', 'auto_increment', 'PRIMARY KEY'],
+                    ['', '', 'PRIMARY KEY AUTOINCREMENT'],
+                    $query);
+            }
+            return $queries;
+        });
 	}
 
 	/**
@@ -789,7 +799,7 @@ class wpdb_drivers extends wpdb {
 	 */
 	public function set_sql_mode( $modes = array() ) {
 		if ( empty( $modes ) ) {
-            $modes_str = $this->get_var( 'SELECT @@SESSION.sql_mode;' );
+            //$modes_str = $this->get_var( 'SELECT @@SESSION.sql_mode;' );
 
             if ( empty( $modes_str ) ) {
 				return;
@@ -1658,6 +1668,7 @@ class wpdb_drivers extends wpdb {
 
 		$this->_do_query( $query );
 
+
 		// MySQL server has gone away, try to reconnect
 		if ( ! $this->dbh->is_connected() ) {
 			if ( $this->check_connection() ) {
@@ -1669,6 +1680,9 @@ class wpdb_drivers extends wpdb {
 				return false;
 			}
 		}
+		//var_dump($query);
+        //var_dump($this->dbh->get_error_message());
+		return false;
 
 		// If there is an error then take note of it..
 		if ( $this->last_error = $this->dbh->get_error_message() ) {

@@ -9,6 +9,7 @@ class WP_DB_Driver_Config {
 
 		$drivers = array(
 			'wpdb_driver_pdo_mysql' => $driver_folder . '/pdo_mysql.php',
+            'wpdb_driver_pdo_sqlite' => $driver_folder . '/pdo_sqlite.php',
 			'wpdb_driver_mysqli'    => $driver_folder . '/mysqli.php',
 			'wpdb_driver_mysql'     => $driver_folder . '/mysql.php',
 		);
@@ -36,6 +37,9 @@ class WP_DB_Driver_Config {
 				case 'pdo_mysql':
 					$driver = 'wpdb_driver_pdo_mysql';
 					break;
+                case 'pdo_sqlite':
+                    $driver = 'wpdb_driver_pdo_sqlite';
+                    break;
 				case 'mysqli':
 					$driver = 'wpdb_driver_mysqli';
 					break;
